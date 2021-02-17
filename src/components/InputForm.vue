@@ -75,7 +75,7 @@
             <b-th></b-th>
             <b-th></b-th>
             <b-th></b-th>
-            <b-th>Class name</b-th>
+            <b-th>Detected class</b-th>
             <b-th>ROIs</b-th>
           </b-tr>
         </b-thead>
