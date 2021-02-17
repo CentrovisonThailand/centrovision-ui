@@ -13,6 +13,7 @@
     "bootstrap": "^4.6.0",
     "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
+    "express": "^4.17.1",
     "express-static": "^1.2.6",
     "vue": "^2.6.12",
     "vue-loading-spinner": "^1.0.11"
