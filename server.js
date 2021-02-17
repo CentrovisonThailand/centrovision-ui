@@ -3,17 +3,19 @@ const serveStatic = require("serve-static");
 const path = require("path");
 var passport = require("passport");
 var BasicStrategy = require("passport-http").BasicStrategy;
+var cors = require("cors");
 
-passport.use(new BasicStrategy({},
-    function(username, password, done) {
-      var success = (username === 'centrovision' && password === 'sennalabs');
-      done(null, success);
-    }
-  ));
+passport.use(
+  new BasicStrategy({}, function(username, password, done) {
+    var success = username === "centrovision" && password === "sennalabs";
+    done(null, success);
+  })
+);
 
 const app = express();
+app.use(cors());
 app.use(passport.initialize());
-app.use(passport.authenticate('basic', { session: false }));
+app.use(passport.authenticate("basic", { session: false }));
 
 //here we are configuring dist to serve app files
 app.use("/", serveStatic(path.join(__dirname, "/dist")));
