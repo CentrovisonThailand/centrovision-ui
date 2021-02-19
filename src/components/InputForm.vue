@@ -216,7 +216,7 @@ export default {
       modalShow: false,
       imageName: null,
       modalSettingShow: false,
-      apiEndpoint: "http://localhost:8000",
+      apiEndpoint: localStorage.getItem('api-endpoint'),
       remoteCheck: true,
       errorMessage: null,
       isImageLaoding: false,
@@ -228,6 +228,7 @@ export default {
       this.selectedFiles = event.target.files[0];
     },
     onUpload() {
+      localStorage.setItem('api-endpoint', this.apiEndpoint)
       if (this.selectedFiles.length === 0) {
         this.showDismissibleAlert = true;
         this.errorMessage = "Plese choose image files before start !!"
