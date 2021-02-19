@@ -4,7 +4,7 @@
       Welcome to CentrovisioN App
     </h1>
     <b-alert v-model="showDismissibleAlert" variant="danger" dismissible>
-      {{errorMessage}}
+      {{ errorMessage }}
     </b-alert>
     <div class="browse-button">
       <b-form-file
@@ -102,7 +102,7 @@
     </div>
     <b-modal v-model="modalShow" size="xl" :title="imageName">
       <center>
-        <circle-10 v-if="isImageLaoding"/>
+        <circle-10 v-if="isImageLaoding" />
         <b-img v-if="showImage && !isImageLaoding" :src="imagePath"></b-img>
       </center>
       <template #modal-footer>
@@ -206,6 +206,11 @@ export default {
   },
   data() {
     return {
+      accessToken: {
+        headers: {
+          Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9",
+        },
+      },
       selectedFiles: [],
       output: [],
       isUploading: false,
@@ -216,7 +221,7 @@ export default {
       modalShow: false,
       imageName: null,
       modalSettingShow: false,
-      apiEndpoint: localStorage.getItem('api-endpoint'),
+      apiEndpoint: localStorage.getItem("api-endpoint"),
       remoteCheck: true,
       errorMessage: null,
       isImageLaoding: false,
@@ -228,13 +233,14 @@ export default {
       this.selectedFiles = event.target.files[0];
     },
     onUpload() {
-      localStorage.setItem('api-endpoint', this.apiEndpoint)
+      localStorage.setItem("api-endpoint", this.apiEndpoint);
       if (this.selectedFiles.length === 0) {
         this.showDismissibleAlert = true;
-        this.errorMessage = "Plese choose image files before start !!"
+        this.errorMessage = "Plese choose image files before start !!";
         return;
       }
       const config = {
+        ...this.accessToken,
         onUploadProgress: (progressEvent) => {
           var percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
@@ -251,7 +257,7 @@ export default {
       });
       this.isUploading = true;
       axios
-        .post(`${this.apiEndpoint}/image`, fd, config)
+        .post(`${this.apiEndpoint}/image`,fd, config)
         .then(({ data }) => {
           this.output = data.output;
           this.isProcessing = false;
@@ -259,7 +265,7 @@ export default {
         .catch((err) => {
           if (err.response) {
             this.showDismissibleAlert = true;
-            this.errorMessage = "Invalid: API Not Found (404)"
+            this.errorMessage = "Invalid: API Not Found (404)";
             this.isUploading = false;
             this.isProcessing = false;
           }
@@ -271,9 +277,14 @@ export default {
       this.showImage = true;
       this.isImageLaoding = true;
       axios
-        .get(`${this.apiEndpoint}/get-image`, {
-          params: { img_name: image_name },
-        })
+        .get(
+          `${this.apiEndpoint}/get-image`,
+          {
+            ...this.accessToken,
+            params: { img_name: image_name },
+          },
+          
+        )
         .then(({ data }) => {
           this.imagePath = `data:image/jpeg;base64, ${data.image}`;
           this.isImageLaoding = false;
@@ -282,10 +293,15 @@ export default {
     downloadImage(image_name) {
       console.log(image_name);
       axios
-        .get(`${this.apiEndpoint}/download/image`, {
-          params: { img_name: image_name },
-          responseType: "blob",
-        })
+        .get(
+          `${this.apiEndpoint}/download/image`,
+          {
+            ...this.accessToken,
+            params: { img_name: image_name },
+            responseType: "blob",
+          },
+          
+        )
         .then((response) => {
           const url = window.URL.createObjectURL(new Blob([response.data]));
           const link = document.createElement("a");
@@ -325,7 +341,7 @@ export default {
   justify-content: space-between;
   margin: 30px auto;
 }
-.custom-file{
+.custom-file {
   text-align: left;
 }
 </style>
